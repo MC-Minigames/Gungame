@@ -1,0 +1,15 @@
+name: MGGungame
+main: com.comze_instancelabs.gungame.Main
+version: 1.0.0
+author: InstanceLabs
+softdepend: [Vault, MinigamesAPI]
+depend: [MinigamesAPI]
+loadbefore: [MinigamesAPI]
+commands:
+   gg:
+      description: Main command
+      usage: /gg [action]
+      aliases: [gungame, mggungame]
+   gp:
+      description: GP command
+      usage: /gp
