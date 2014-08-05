@@ -44,8 +44,6 @@ import com.comze_instancelabs.minigamesapi.util.Validator;
 
 public class Main extends JavaPlugin implements Listener {
 
-	// autorespawn
-
 	MinigamesAPI api = null;
 	PluginInstance pli = null;
 	static Main m = null;
@@ -53,6 +51,8 @@ public class Main extends JavaPlugin implements Listener {
 
 	HashMap<String, Integer> lv = new HashMap<String, Integer>();
 	IClasses icl;
+	
+	CommandHandler cmd;
 
 	public void onEnable() {
 		m = this;
@@ -68,6 +68,8 @@ public class Main extends JavaPlugin implements Listener {
 		pinstance.setArenaListener(t);
 		pli = pinstance;
 		icl.loadClasses();
+		
+		cmd = new CommandHandler();
 	}
 
 	public static ArrayList<Arena> loadArenas(JavaPlugin plugin, ArenasConfig cf) {
@@ -93,12 +95,11 @@ public class Main extends JavaPlugin implements Listener {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("gg")) {
-			new CommandHandler().handleArgs(this, "gungame", "/" + cmd.getName(), sender, args);
+			this.cmd.handleArgs(this, "gungame", "/" + cmd.getName(), sender, args);
 			if (args.length > 0) {
 				if (args[0].equalsIgnoreCase("shop")) {
 					if (sender instanceof Player) {
 						icl.openGUI(sender.getName());
-						
 					}
 				}
 			}
@@ -110,7 +111,7 @@ public class Main extends JavaPlugin implements Listener {
 			}
 			return true;
 		}
-		return false;
+		return true;
 	}
 
 	@EventHandler

@@ -19,7 +19,7 @@ public class IArena extends Arena {
 
 	public static Main m;
 	public PluginInstance pli;
-	
+
 	boolean cteam = true;
 
 	public IArena(Main m, String arena_id) {
@@ -35,26 +35,26 @@ public class IArena extends Arena {
 
 	BukkitTask tt;
 	int currentingamecount;
-	
+
 	@Override
-	public void joinPlayerLobby(String p_){
+	public void joinPlayerLobby(String p_) {
 		super.joinPlayerLobby(p_);
 		m.lv.put(p_, 0);
 		ItemStack w = new ItemStack(Material.WOOD_SWORD, 1);
-		Player p= Bukkit.getPlayer(p_);
+		Player p = Bukkit.getPlayer(p_);
 		p.getInventory().addItem(w);
 		p.updateInventory();
 		m.addextraitems(p);
 		m.scoreboard.updateScoreboard(this);
-		
+
 		p.setGameMode(GameMode.SURVIVAL);
 	}
-	
+
 	@Override
 	public void leavePlayer(final String playername, boolean fullLeave) {
 		super.leavePlayerRaw(playername, fullLeave);
 	}
-	
+
 	@Override
 	public void start(boolean tp) {
 
@@ -71,7 +71,7 @@ public class IArena extends Arena {
 								// give items
 								m.lv.put(p_, 0);
 								ItemStack w = new ItemStack(Material.WOOD_SWORD, 1);
-								Player p= Bukkit.getPlayer(p_);
+								Player p = Bukkit.getPlayer(p_);
 								p.getInventory().addItem(w);
 								p.updateInventory();
 								m.addextraitems(p);
