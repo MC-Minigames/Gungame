@@ -51,7 +51,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	HashMap<String, Integer> lv = new HashMap<String, Integer>();
 	IClasses icl;
-	
+
 	CommandHandler cmd;
 
 	public void onEnable() {
@@ -68,7 +68,7 @@ public class Main extends JavaPlugin implements Listener {
 		pinstance.setArenaListener(t);
 		pli = pinstance;
 		icl.loadClasses();
-		
+
 		cmd = new CommandHandler();
 	}
 
@@ -123,7 +123,7 @@ public class Main extends JavaPlugin implements Listener {
 				String entityKilled = event.getEntity().getName();
 				getLogger().info(killername + " killed " + entityKilled);
 				Player p1 = event.getEntity().getKiller();
-				Player p2 = event.getEntity();
+				final Player p2 = event.getEntity();
 
 				IArena a = (IArena) pli.global_players.get(p1.getName());
 				Util.teleportPlayerFixed(p2, a.getSpawns().get(0));
@@ -141,20 +141,25 @@ public class Main extends JavaPlugin implements Listener {
 				getConfig().set("player." + entityKilled + ".gp", gploser);
 				this.saveConfig();
 
-				p2.getInventory().clear();
-				p2.getInventory().setHelmet(null);
-				p2.getInventory().setChestplate(null);
-				p2.getInventory().setLeggings(null);
-				p2.getInventory().setBoots(null);
-				p2.getInventory().setArmorContents(null);
-				ItemStack selectwand = new ItemStack(Material.WOOD_SWORD, 1);
-				ItemMeta meta = (ItemMeta) selectwand.getItemMeta();
-				meta.setDisplayName("gunsword");
-				selectwand.setItemMeta(meta);
+				Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+					public void run() {
+						p2.getInventory().clear();
+						p2.getInventory().setHelmet(null);
+						p2.getInventory().setChestplate(null);
+						p2.getInventory().setLeggings(null);
+						p2.getInventory().setBoots(null);
+						p2.getInventory().setArmorContents(null);
+						ItemStack selectwand = new ItemStack(Material.WOOD_SWORD, 1);
+						ItemMeta meta = (ItemMeta) selectwand.getItemMeta();
+						meta.setDisplayName("Gunsword");
+						selectwand.setItemMeta(meta);
+						p2.getInventory().addItem(selectwand);
+						p2.updateInventory();
+					}
+				}, 20L);
+
 				p2.playSound(p2.getLocation(), Sound.CAT_MEOW, 1F, 1);
 
-				p2.getInventory().addItem(selectwand);
-				p2.updateInventory();
 				p2.setFoodLevel(20);
 
 				lv.put(p2.getName(), 0);
@@ -302,33 +307,25 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		if (continue_) {
 			for (int i = 0; i < keys.size(); i++) {
-				for(AClass n : icl.c){
-					if(n.getName().equalsIgnoreCase(keys.get(i))){
-						for(ItemStack item : n.getItems()){
+				for (AClass n : icl.c) {
+					if (n.getName().equalsIgnoreCase(keys.get(i))) {
+						for (ItemStack item : n.getItems()) {
 							p.getInventory().addItem(item);
 							p.updateInventory();
 						}
 					}
 				}
-				/*if (keys.get(i).toString().equalsIgnoreCase("Diamond_Sword_Lv_I")) {
-					InventoryAdding.addtoinv(p, Material.DIAMOND_SWORD, 1, "gunsword", Enchantment.DAMAGE_ALL, 1);
-				}
-				if (keys.get(i).toString().equalsIgnoreCase("Diamond_Sword_Lv_II")) {
-					InventoryAdding.addtoinv(p, Material.DIAMOND_SWORD, 1, "gunsword", Enchantment.DAMAGE_ALL, 4);
-				}
-				if (keys.get(i).toString().equalsIgnoreCase("Instant_Heal")) {
-					PotionEffect heal = PotionEffectType.HEAL.createEffect(99999999, 7);
-					p.addPotionEffect(heal, true);
-				}
-				if (keys.get(i).toString().equalsIgnoreCase("OP_Bow")) {
-					InventoryAdding.addtoinv(p, Material.BOW, 1, "gunbow", Enchantment.ARROW_DAMAGE, 5);
-				}
-				if (keys.get(i).toString().equalsIgnoreCase("Diamond_Armor")) {
-					p.getInventory().setHelmet(new ItemStack(Material.DIAMOND_HELMET, 1));
-					p.getInventory().setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE, 1));
-					p.getInventory().setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS, 1));
-					p.getInventory().setBoots(new ItemStack(Material.DIAMOND_BOOTS, 1));
-				}*/
+				/*
+				 * if (keys.get(i).toString().equalsIgnoreCase("Diamond_Sword_Lv_I")) { InventoryAdding.addtoinv(p, Material.DIAMOND_SWORD, 1,
+				 * "gunsword", Enchantment.DAMAGE_ALL, 1); } if (keys.get(i).toString().equalsIgnoreCase("Diamond_Sword_Lv_II")) {
+				 * InventoryAdding.addtoinv(p, Material.DIAMOND_SWORD, 1, "gunsword", Enchantment.DAMAGE_ALL, 4); } if
+				 * (keys.get(i).toString().equalsIgnoreCase("Instant_Heal")) { PotionEffect heal = PotionEffectType.HEAL.createEffect(99999999, 7);
+				 * p.addPotionEffect(heal, true); } if (keys.get(i).toString().equalsIgnoreCase("OP_Bow")) { InventoryAdding.addtoinv(p, Material.BOW,
+				 * 1, "gunbow", Enchantment.ARROW_DAMAGE, 5); } if (keys.get(i).toString().equalsIgnoreCase("Diamond_Armor")) {
+				 * p.getInventory().setHelmet(new ItemStack(Material.DIAMOND_HELMET, 1)); p.getInventory().setChestplate(new
+				 * ItemStack(Material.DIAMOND_CHESTPLATE, 1)); p.getInventory().setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS, 1));
+				 * p.getInventory().setBoots(new ItemStack(Material.DIAMOND_BOOTS, 1)); }
+				 */
 			}
 		}
 
