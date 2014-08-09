@@ -100,7 +100,7 @@ public class Main extends JavaPlugin implements Listener {
 			if (args.length > 0) {
 				if (args[0].equalsIgnoreCase("shop")) {
 					if (sender instanceof Player) {
-						icl.openGUI(sender.getName());
+						icl.openGUI(((Player) sender).getName());
 					}
 				}
 			}
@@ -108,7 +108,7 @@ public class Main extends JavaPlugin implements Listener {
 		} else if (cmd.getName().equalsIgnoreCase("gp")) {
 			if (sender instanceof Player) {
 				int i = getConfig().isSet("player." + sender.getName() + ".gp") ? getConfig().getInt("player." + sender.getName() + ".gp") : 0;
-				sender.sendMessage(ChatColor.GREEN + "You have " + i + " GP. You can buy better gear with /gg shop.");
+				sender.sendMessage(ChatColor.GREEN + "You have " + ChatColor.DARK_GREEN + i + ChatColor.GREEN + " GP. You can buy better gear with /gg shop.");
 			}
 			return true;
 		}
