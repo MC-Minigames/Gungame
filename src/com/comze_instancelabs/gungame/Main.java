@@ -1,6 +1,7 @@
 package com.comze_instancelabs.gungame;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
