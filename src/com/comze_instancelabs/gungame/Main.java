@@ -126,7 +126,7 @@ public class Main extends JavaPlugin implements Listener {
 				event.getEntity().setHealth(20);
 				String killername = event.getEntity().getKiller().getName();
 				String entityKilled = event.getEntity().getName();
-				getLogger().info(killername + " killed " + entityKilled);
+				// getLogger().info(killername + " killed " + entityKilled);
 				try {
 					pli.getRewardsInstance().giveKillReward(killername, 2);
 				} catch (Exception e) {
@@ -234,7 +234,7 @@ public class Main extends JavaPlugin implements Listener {
 
 				ArrayList<String> keys = new ArrayList<String>();
 				if (!getConfig().isConfigurationSection("player." + p2.getName() + ".items")) {
-					getLogger().info("The killed player has no special items.");
+					// getLogger().info("The killed player has no special items.");
 				} else {
 					keys.addAll(getConfig().getConfigurationSection("player." + p2.getName() + ".items").getKeys(false));
 					for (int i = 0; i < keys.size(); i++) {
@@ -274,6 +274,12 @@ public class Main extends JavaPlugin implements Listener {
 
 					String killerName = p1.getName();
 					String entityKilled = event.getPlayer().getName();
+
+					try {
+						pli.getRewardsInstance().giveKillReward(killerName, 2);
+					} catch (Exception e) {
+						System.out.println("Please update MinigamesLib to the latest version to enable kill rewards.");
+					}
 
 					Integer gpkiller = 0;
 					Integer gploser = 0;

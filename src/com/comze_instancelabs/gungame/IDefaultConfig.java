@@ -8,7 +8,7 @@ import com.comze_instancelabs.minigamesapi.config.DefaultConfig;
 public class IDefaultConfig extends DefaultConfig {
 
 	public IDefaultConfig(JavaPlugin plugin) {
-		super(plugin, true);
+		super(plugin, false);
 		IDefaultConfig.init(plugin);
 	}
 
