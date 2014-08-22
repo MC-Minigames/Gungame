@@ -2,6 +2,8 @@ package com.comze_instancelabs.gungame;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -102,6 +104,8 @@ public class Main extends JavaPlugin implements Listener {
 					if (sender instanceof Player) {
 						icl.openGUI(((Player) sender).getName());
 					}
+				} else if (args[0].equalsIgnoreCase("leaderboards") || args[0].equalsIgnoreCase("lb")) {
+					sender.sendMessage("§aLeaderboards:\n" + this.getTop5());
 				}
 			}
 			return true;
@@ -123,6 +127,11 @@ public class Main extends JavaPlugin implements Listener {
 				String killername = event.getEntity().getKiller().getName();
 				String entityKilled = event.getEntity().getName();
 				getLogger().info(killername + " killed " + entityKilled);
+				try {
+					pli.getRewardsInstance().giveKillReward(killername, 2);
+				} catch (Exception e) {
+					System.out.println("Please update MinigamesLib to the latest version to enable kill rewards.");
+				}
 				Player p1 = event.getEntity().getKiller();
 				final Player p2 = event.getEntity();
 
@@ -360,6 +369,29 @@ public class Main extends JavaPlugin implements Listener {
 		if (pli.global_players.containsKey(p.getName())) {
 			event.setCancelled(true);
 		}
+	}
+
+	// copied from old gungame, might need some recode
+	public String getTop5() {
+		boolean boo = false;
+		ArrayList<String> keys = new ArrayList<String>();
+		keys.addAll(getConfig().getConfigurationSection("player.").getKeys(false));
+		ArrayList<Integer> serious = new ArrayList<Integer>();
+		HashMap<Integer, String> seriousp = new HashMap<Integer, String>();
+		for (int i = 0; i < keys.size(); i++) {
+			serious.add(getConfig().getInt("player." + keys.get(i) + ".gp"));
+			seriousp.put(getConfig().getInt("player." + keys.get(i) + ".gp"), keys.get(i));
+		}
+		Comparator<Integer> comparator = Collections.<Integer> reverseOrder();
+		Collections.sort(serious, comparator);
+		String retstr = "";
+		for (int i = 0; i < serious.size(); i++) {
+			retstr += serious.get(i).toString() + " - " + seriousp.get(serious.get(i)) + "\n";
+			if (i == 6) {
+				break;
+			}
+		}
+		return retstr;
 	}
 
 }
