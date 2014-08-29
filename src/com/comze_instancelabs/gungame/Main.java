@@ -73,8 +73,15 @@ public class Main extends JavaPlugin implements Listener {
 
 		cmd = new ICommandHandler();
 
-		mainsql = new MainSQL(this, true);
-		mainsql.createTables();
+		try {
+			mainsql = new MainSQL(this, true);
+			if (getConfig().getBoolean("mysql.enabled")) {
+				mainsql.createTables();
+			}
+		} catch (Exception e) {
+			System.out.println("Failed to load MySQL." + e.getMessage());
+		}
+
 	}
 
 	public static ArrayList<Arena> loadArenas(JavaPlugin plugin, ArenasConfig cf) {
