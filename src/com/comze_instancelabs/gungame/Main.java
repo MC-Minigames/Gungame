@@ -132,7 +132,7 @@ public class Main extends JavaPlugin implements Listener {
 				} catch (Exception e) {
 					System.out.println("Please update MinigamesLib to the latest version to enable kill rewards.");
 				}
-				Player p1 = event.getEntity().getKiller();
+				final Player p1 = event.getEntity().getKiller();
 				final Player p2 = event.getEntity();
 
 				IArena a = (IArena) pli.global_players.get(p1.getName());
@@ -165,6 +165,9 @@ public class Main extends JavaPlugin implements Listener {
 						selectwand.setItemMeta(meta);
 						p2.getInventory().addItem(selectwand);
 						p2.updateInventory();
+
+						m.addextraitems(p1);
+						m.addextraitems(p2);
 					}
 				}, 20L);
 
@@ -208,6 +211,50 @@ public class Main extends JavaPlugin implements Listener {
 
 				this.addextraitems(p1);
 				this.addextraitems(p2);
+			}
+		} else {
+			// death by something else -> respawn
+
+			event.getEntity().setHealth(20);
+			if (event.getEntity() != null) {
+				if (event.getEntity() instanceof Player) {
+					final Player p = (Player) event.getEntity();
+					IArena a = (IArena) pli.global_players.get(p.getName());
+					Util.teleportPlayerFixed(p, a.getSpawns().get(0));
+
+					p.playSound(p.getLocation(), Sound.CAT_MEOW, 1F, 1);
+
+					p.setFoodLevel(20);
+
+					lv.put(p.getName(), 0);
+
+					Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+						public void run() {
+							p.getInventory().clear();
+							p.getInventory().setHelmet(null);
+							p.getInventory().setChestplate(null);
+							p.getInventory().setLeggings(null);
+							p.getInventory().setBoots(null);
+							p.getInventory().setArmorContents(null);
+							ItemStack selectwand = new ItemStack(Material.WOOD_SWORD, 1);
+							ItemMeta meta = (ItemMeta) selectwand.getItemMeta();
+							meta.setDisplayName("Gunsword");
+							selectwand.setItemMeta(meta);
+							p.getInventory().addItem(selectwand);
+							p.updateInventory();
+
+							m.addextraitems(p);
+						}
+					}, 20L);
+
+					for (PotionEffect effect : p.getActivePotionEffects())
+						p.removePotionEffect(effect.getType());
+
+					p.setHealth(20);
+					p.setFoodLevel(20);
+
+					this.addextraitems(p);
+				}
 			}
 		}
 	}
