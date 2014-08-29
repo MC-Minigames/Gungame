@@ -55,7 +55,7 @@ public class Main extends JavaPlugin implements Listener {
 	HashMap<String, Integer> lv = new HashMap<String, Integer>();
 	IClasses icl;
 
-	CommandHandler cmd;
+	ICommandHandler cmd;
 
 	public void onEnable() {
 		m = this;
@@ -72,7 +72,7 @@ public class Main extends JavaPlugin implements Listener {
 		pli = pinstance;
 		icl.loadClasses();
 
-		cmd = new CommandHandler();
+		cmd = new ICommandHandler();
 	}
 
 	public static ArrayList<Arena> loadArenas(JavaPlugin plugin, ArenasConfig cf) {
