@@ -1,7 +1,6 @@
 package com.comze_instancelabs.gungame;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -15,7 +14,6 @@ import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,14 +28,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
+import com.comze_instancelabs.gungame.sql.MainSQL;
 import com.comze_instancelabs.minigamesapi.Arena;
 import com.comze_instancelabs.minigamesapi.ArenaSetup;
 import com.comze_instancelabs.minigamesapi.ArenaState;
 import com.comze_instancelabs.minigamesapi.MinigamesAPI;
 import com.comze_instancelabs.minigamesapi.PluginInstance;
-import com.comze_instancelabs.minigamesapi.commands.CommandHandler;
 import com.comze_instancelabs.minigamesapi.config.ArenasConfig;
 import com.comze_instancelabs.minigamesapi.config.MessagesConfig;
 import com.comze_instancelabs.minigamesapi.config.StatsConfig;
@@ -57,6 +54,8 @@ public class Main extends JavaPlugin implements Listener {
 
 	ICommandHandler cmd;
 
+	MainSQL mainsql;
+
 	public void onEnable() {
 		m = this;
 		api = MinigamesAPI.getAPI().setupAPI(this, "gungame", IArena.class, new ArenasConfig(this), new MessagesConfig(this), new IClassesConfig(this), new StatsConfig(this, false), new IDefaultConfig(this), true);
@@ -73,6 +72,9 @@ public class Main extends JavaPlugin implements Listener {
 		icl.loadClasses();
 
 		cmd = new ICommandHandler();
+
+		mainsql = new MainSQL(this, true);
+		mainsql.createTables();
 	}
 
 	public static ArrayList<Arena> loadArenas(JavaPlugin plugin, ArenasConfig cf) {
@@ -151,6 +153,13 @@ public class Main extends JavaPlugin implements Listener {
 				getConfig().set("player." + entityKilled + ".gp", gploser);
 				this.saveConfig();
 
+				try {
+					mainsql.updateStats(p1.getName(), 2);
+					mainsql.updateStats(p2.getName(), -1);
+				} catch (Exception e) {
+					System.out.println("Failed updating sql gp.");
+				}
+
 				Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 					public void run() {
 						p2.getInventory().clear();
@@ -220,7 +229,11 @@ public class Main extends JavaPlugin implements Listener {
 				if (event.getEntity() instanceof Player) {
 					final Player p = (Player) event.getEntity();
 					IArena a = (IArena) pli.global_players.get(p.getName());
-					Util.teleportPlayerFixed(p, a.getSpawns().get(0));
+					if (a != null && p != null) {
+						Util.teleportPlayerFixed(p, a.getSpawns().get(0));
+					} else {
+						return;
+					}
 
 					p.playSound(p.getLocation(), Sound.CAT_MEOW, 1F, 1);
 
@@ -340,6 +353,13 @@ public class Main extends JavaPlugin implements Listener {
 					getConfig().set("player." + killerName + ".gp", gpkiller);
 					getConfig().set("player." + entityKilled + ".gp", gploser);
 					this.saveConfig();
+
+					try {
+						mainsql.updateStats(p1.getName(), 2);
+						mainsql.updateStats(p2.getName(), -1);
+					} catch (Exception e) {
+						System.out.println("Failed updating sql gp.");
+					}
 
 					p1.playEffect(p1.getLocation(), Effect.POTION_BREAK, 5);
 					Integer current = lv.get(p1.getName());

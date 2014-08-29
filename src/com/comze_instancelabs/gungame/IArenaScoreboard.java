@@ -25,26 +25,28 @@ public class IArenaScoreboard extends ArenaScoreboard {
 	}
 
 	public void updateScoreboard(final IArena arena) {
-		for (String p_ : arena.getAllPlayers()) {
-			Player p = Bukkit.getPlayer(p_);
-			if (board == null) {
-				board = Bukkit.getScoreboardManager().getNewScoreboard();
+		if (arena != null) {
+			for (String p_ : arena.getAllPlayers()) {
+				Player p = Bukkit.getPlayer(p_);
+				if (board == null) {
+					board = Bukkit.getScoreboardManager().getNewScoreboard();
+				}
+				if (objective == null) {
+					objective = board.registerNewObjective("test", "dummy");
+				}
+
+				objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+
+				objective.setDisplayName("§3Lv");
+
+				board.resetScores(p_);
+				if (!plugin.lv.containsKey(p_)) {
+					plugin.lv.put(p_, 0);
+				}
+				objective.getScore(p_).setScore(plugin.lv.get(p_));
+
+				p.setScoreboard(board);
 			}
-			if (objective == null) {
-				objective = board.registerNewObjective("test", "dummy");
-			}
-
-			objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
-
-			objective.setDisplayName("§3Lv");
-
-			board.resetScores(p_);
-			if(!plugin.lv.containsKey(p_)){
-				plugin.lv.put(p_, 0);
-			}
-			objective.getScore(p_).setScore(plugin.lv.get(p_));
-
-			p.setScoreboard(board);
 		}
 	}
 
