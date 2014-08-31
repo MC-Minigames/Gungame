@@ -1,5 +1,6 @@
 package com.comze_instancelabs.gungame;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -16,6 +17,21 @@ public class ICommandHandler extends CommandHandler {
 
 	@Override
 	public boolean getLeaderboards(PluginInstance pli, CommandSender sender, String[] args, String uber_permission, String cmd, String action, JavaPlugin plugin, Player p) {
+		return true;
+	}
+
+	@Override
+	public boolean setSpawn(PluginInstance pli, CommandSender sender, String[] args, String uber_permission, String cmd, String action, JavaPlugin plugin, Player p) {
+		if (!sender.hasPermission(uber_permission + ".setup")) {
+			sender.sendMessage(pli.getMessagesConfig().no_perm);
+			return true;
+		}
+		if (args.length > 1) {
+			int i = pli.arenaSetup.autoSetSpawn(plugin, args[1], p.getLocation());
+			sender.sendMessage(pli.getMessagesConfig().successfully_set.replaceAll("<component>", "spawn " + Integer.toString(i)));
+		} else {
+			sender.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.RED + "-" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + " Usage: " + cmd + " " + action + " <arena>");
+		}
 		return true;
 	}
 

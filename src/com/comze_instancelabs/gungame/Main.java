@@ -36,7 +36,6 @@ import com.comze_instancelabs.minigamesapi.ArenaState;
 import com.comze_instancelabs.minigamesapi.MinigamesAPI;
 import com.comze_instancelabs.minigamesapi.PluginInstance;
 import com.comze_instancelabs.minigamesapi.config.ArenasConfig;
-import com.comze_instancelabs.minigamesapi.config.MessagesConfig;
 import com.comze_instancelabs.minigamesapi.config.StatsConfig;
 import com.comze_instancelabs.minigamesapi.util.AClass;
 import com.comze_instancelabs.minigamesapi.util.Util;
@@ -53,12 +52,15 @@ public class Main extends JavaPlugin implements Listener {
 	IClasses icl;
 
 	ICommandHandler cmd;
+	IMessagesConfig im;
 
 	MainSQL mainsql;
 
 	public void onEnable() {
 		m = this;
-		api = MinigamesAPI.getAPI().setupAPI(this, "gungame", IArena.class, new ArenasConfig(this), new MessagesConfig(this), new IClassesConfig(this), new StatsConfig(this, false), new IDefaultConfig(this), true);
+		IMessagesConfig im = new IMessagesConfig(this);
+		this.im = im;
+		api = MinigamesAPI.getAPI().setupAPI(this, "gungame", IArena.class, new ArenasConfig(this), im, new IClassesConfig(this), new StatsConfig(this, false), new IDefaultConfig(this), true);
 		PluginInstance pinstance = api.pinstances.get(this);
 		pinstance.addLoadedArenas(loadArenas(this, pinstance.getArenasConfig()));
 		Bukkit.getPluginManager().registerEvents(this, this);
@@ -72,6 +74,11 @@ public class Main extends JavaPlugin implements Listener {
 		icl.loadClasses();
 
 		cmd = new ICommandHandler();
+
+		this.getConfig().addDefault("config.map_rotation_time_minutes", 10);
+
+		this.getConfig().options().copyDefaults(true);
+		this.saveConfig();
 
 		try {
 			mainsql = new MainSQL(this, true);
