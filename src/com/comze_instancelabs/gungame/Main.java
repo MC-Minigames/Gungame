@@ -189,7 +189,7 @@ public class Main extends JavaPlugin implements Listener {
 						p2.getInventory().addItem(selectwand);
 						p2.updateInventory();
 
-						m.addextraitems(p1);
+						// m.addextraitems(p1);
 						m.addextraitems(p2);
 					}
 				}, 20L);
@@ -232,7 +232,7 @@ public class Main extends JavaPlugin implements Listener {
 				p2.setHealth(20);
 				p2.setFoodLevel(20);
 
-				this.addextraitems(p1);
+				// this.addextraitems(p1);
 				this.addextraitems(p2);
 			}
 		} else {
@@ -335,6 +335,9 @@ public class Main extends JavaPlugin implements Listener {
 				try {
 					EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getPlayer().getLastDamageCause();
 					p1 = (Player) e.getDamager();
+					if (p1 != null && !pli.global_players.containsKey(p1.getName())) {
+						continue_ = false;
+					}
 				} catch (Exception ex) {
 					continue_ = false;
 				}
@@ -385,9 +388,6 @@ public class Main extends JavaPlugin implements Listener {
 					p1.setHealth(20);
 					p2.setHealth(20);
 					p2.setFoodLevel(20);
-
-					// add extra items
-					this.addextraitems(p1);
 				}
 
 			}
@@ -412,17 +412,6 @@ public class Main extends JavaPlugin implements Listener {
 						}
 					}
 				}
-				/*
-				 * if (keys.get(i).toString().equalsIgnoreCase("Diamond_Sword_Lv_I")) { InventoryAdding.addtoinv(p, Material.DIAMOND_SWORD, 1,
-				 * "gunsword", Enchantment.DAMAGE_ALL, 1); } if (keys.get(i).toString().equalsIgnoreCase("Diamond_Sword_Lv_II")) {
-				 * InventoryAdding.addtoinv(p, Material.DIAMOND_SWORD, 1, "gunsword", Enchantment.DAMAGE_ALL, 4); } if
-				 * (keys.get(i).toString().equalsIgnoreCase("Instant_Heal")) { PotionEffect heal = PotionEffectType.HEAL.createEffect(99999999, 7);
-				 * p.addPotionEffect(heal, true); } if (keys.get(i).toString().equalsIgnoreCase("OP_Bow")) { InventoryAdding.addtoinv(p, Material.BOW,
-				 * 1, "gunbow", Enchantment.ARROW_DAMAGE, 5); } if (keys.get(i).toString().equalsIgnoreCase("Diamond_Armor")) {
-				 * p.getInventory().setHelmet(new ItemStack(Material.DIAMOND_HELMET, 1)); p.getInventory().setChestplate(new
-				 * ItemStack(Material.DIAMOND_CHESTPLATE, 1)); p.getInventory().setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS, 1));
-				 * p.getInventory().setBoots(new ItemStack(Material.DIAMOND_BOOTS, 1)); }
-				 */
 			}
 		}
 
