@@ -389,7 +389,6 @@ public class Main extends JavaPlugin implements Listener {
 					p2.setHealth(20);
 					p2.setFoodLevel(20);
 				}
-
 			}
 		}
 	}

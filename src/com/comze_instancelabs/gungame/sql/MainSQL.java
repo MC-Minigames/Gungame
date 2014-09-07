@@ -44,7 +44,7 @@ public class MainSQL {
 		Connection c = MySQL.open();
 
 		try {
-			c.createStatement().execute("CREATE DATABASE IF NOT EXISTS " + plugin.getConfig().getString("mysql.database"));
+			c.createStatement().execute("CREATE DATABASE IF NOT EXISTS `" + plugin.getConfig().getString("mysql.database") + "`");
 			c.createStatement().execute("CREATE TABLE IF NOT EXISTS " + plugin.getName() + "_gp" + " (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, player VARCHAR(100), gp INT)");
 			// }
 		} catch (SQLException e) {
