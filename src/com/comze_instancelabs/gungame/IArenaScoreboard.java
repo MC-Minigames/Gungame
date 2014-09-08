@@ -65,6 +65,7 @@ public class IArenaScoreboard extends ArenaScoreboard {
 
 				gpp.get(p_).getScore("Your Level").setScore(plugin.lv.get(p_));
 				gpp.get(p_).getScore("Gunpoints").setScore(gp);
+				gpp.get(p_).getScore("Players").setScore(arena.getAllPlayers().size());
 
 				p.setScoreboard(ascore.get(p_));
 			}
