@@ -121,7 +121,7 @@ public class Main extends JavaPlugin implements Listener {
 						icl.openGUI(((Player) sender).getName());
 					}
 				} else if (args[0].equalsIgnoreCase("leaderboards") || args[0].equalsIgnoreCase("lb")) {
-					sender.sendMessage("�aLeaderboards:\n" + this.getTop5());
+					sender.sendMessage(ChatColor.GREEN + "Leaderboards:\n" + this.getTop5());
 				}
 			}
 			return true;
