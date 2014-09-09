@@ -45,7 +45,7 @@ public class IArenaScoreboard extends ArenaScoreboard {
 				}
 
 				aobjective.get(p_).setDisplaySlot(DisplaySlot.BELOW_NAME);
-				aobjective.get(p_).setDisplayName("§3Lv");
+				aobjective.get(p_).setDisplayName(ChatColor.AQUA + "Lv");
 
 				gpp.get(p_).setDisplaySlot(DisplaySlot.SIDEBAR);
 				gpp.get(p_).setDisplayName("[" + p_ + "]");
@@ -60,7 +60,7 @@ public class IArenaScoreboard extends ArenaScoreboard {
 
 				int gp = 0;
 				if (plugin.getConfig().isSet("player." + p_)) {
-					gp = plugin.getConfig().getInt("player." + p_ + ".gp") + 2; // +2 gp!
+					gp = plugin.getConfig().getInt("player." + p_ + ".gp"); // +2 gp!
 				}
 
 				gpp.get(p_).getScore("Your Level").setScore(plugin.lv.get(p_));
