@@ -33,6 +33,7 @@ public class IArena extends Arena {
 		super(m, arena_id, ArenaType.JUMPNRUN);
 		pli = MinigamesAPI.getAPI().pinstances.get(m);
 		this.m = m;
+		this.setAlwaysPvP(true);
 	}
 
 	@Override

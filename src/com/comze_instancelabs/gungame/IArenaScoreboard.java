@@ -41,7 +41,11 @@ public class IArenaScoreboard extends ArenaScoreboard {
 					aobjective.put(p_, ascore.get(p_).registerNewObjective(p_, "dummy"));
 				}
 				if (!gpp.containsKey(p_)) {
-					gpp.put(p_, ascore.get(p_).registerNewObjective(p_ + "__2", "dummy"));
+					if (p_.length() < 14) {
+						gpp.put(p_, ascore.get(p_).registerNewObjective(p_ + "_2", "dummy"));
+					} else {
+						gpp.put(p_, ascore.get(p_).registerNewObjective(p_.subSequence(0, p_.length() - 1) + "-", "dummy"));
+					}
 				}
 
 				aobjective.get(p_).setDisplaySlot(DisplaySlot.BELOW_NAME);
