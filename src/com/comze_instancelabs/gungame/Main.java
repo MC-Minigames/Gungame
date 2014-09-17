@@ -238,49 +238,51 @@ public class Main extends JavaPlugin implements Listener {
 		} else {
 			// death by something else -> respawn
 
-			event.getEntity().setHealth(20);
-			if (event.getEntity() != null) {
-				if (event.getEntity() instanceof Player) {
-					final Player p = (Player) event.getEntity();
-					IArena a = (IArena) pli.global_players.get(p.getName());
-					if (a != null && p != null) {
-						Util.teleportPlayerFixed(p, a.getSpawns().get(0));
-					} else {
-						return;
-					}
-
-					p.playSound(p.getLocation(), Sound.CAT_MEOW, 1F, 1);
-
-					p.setFoodLevel(20);
-
-					lv.put(p.getName(), 0);
-
-					Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-						public void run() {
-							p.getInventory().clear();
-							p.getInventory().setHelmet(null);
-							p.getInventory().setChestplate(null);
-							p.getInventory().setLeggings(null);
-							p.getInventory().setBoots(null);
-							p.getInventory().setArmorContents(null);
-							ItemStack selectwand = new ItemStack(Material.WOOD_SWORD, 1);
-							ItemMeta meta = (ItemMeta) selectwand.getItemMeta();
-							meta.setDisplayName("Gunsword");
-							selectwand.setItemMeta(meta);
-							p.getInventory().addItem(selectwand);
-							p.updateInventory();
-
-							m.addextraitems(p);
+			if (pli.global_players.containsKey(event.getEntity().getName())) {
+				event.getEntity().setHealth(20);
+				if (event.getEntity() != null) {
+					if (event.getEntity() instanceof Player) {
+						final Player p = (Player) event.getEntity();
+						IArena a = (IArena) pli.global_players.get(p.getName());
+						if (a != null && p != null) {
+							Util.teleportPlayerFixed(p, a.getSpawns().get(0));
+						} else {
+							return;
 						}
-					}, 20L);
 
-					for (PotionEffect effect : p.getActivePotionEffects())
-						p.removePotionEffect(effect.getType());
+						p.playSound(p.getLocation(), Sound.CAT_MEOW, 1F, 1);
 
-					p.setHealth(20);
-					p.setFoodLevel(20);
+						p.setFoodLevel(20);
 
-					this.addextraitems(p);
+						lv.put(p.getName(), 0);
+
+						Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+							public void run() {
+								p.getInventory().clear();
+								p.getInventory().setHelmet(null);
+								p.getInventory().setChestplate(null);
+								p.getInventory().setLeggings(null);
+								p.getInventory().setBoots(null);
+								p.getInventory().setArmorContents(null);
+								ItemStack selectwand = new ItemStack(Material.WOOD_SWORD, 1);
+								ItemMeta meta = (ItemMeta) selectwand.getItemMeta();
+								meta.setDisplayName("Gunsword");
+								selectwand.setItemMeta(meta);
+								p.getInventory().addItem(selectwand);
+								p.updateInventory();
+
+								m.addextraitems(p);
+							}
+						}, 20L);
+
+						for (PotionEffect effect : p.getActivePotionEffects())
+							p.removePotionEffect(effect.getType());
+
+						p.setHealth(20);
+						p.setFoodLevel(20);
+
+						this.addextraitems(p);
+					}
 				}
 			}
 		}
