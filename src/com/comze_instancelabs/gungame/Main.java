@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,6 +15,8 @@ import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -161,6 +164,8 @@ public class Main extends JavaPlugin implements Listener {
 		if (event.getEntity().getKiller() != null) {
 			if (event.getEntity().getKiller() instanceof Player && event.getEntity() instanceof Player && pli.global_players.containsKey(event.getEntity().getName()) && pli.global_players.containsKey(event.getEntity().getKiller().getName())) {
 				event.getEntity().setHealth(20);
+				final Location l = event.getEntity().getLocation();
+				clear(l);
 				String killername = event.getEntity().getKiller().getName();
 				String entityKilled = event.getEntity().getName();
 				// getLogger().info(killername + " killed " + entityKilled);
@@ -174,6 +179,11 @@ public class Main extends JavaPlugin implements Listener {
 
 				IArena a = (IArena) pli.global_players.get(p1.getName());
 				Util.teleportPlayerFixed(p2, a.getSpawns().get(0));
+				Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+					public void run() {
+						clear(l);
+					}
+				}, 20L);
 
 				// gp updaten:
 				Integer gpkiller = 2;
@@ -490,6 +500,37 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 		return retstr;
+	}
+
+	public static Entity[] getNearbyEntities(Location l, int radius) {
+		int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16)) / 16;
+		HashSet<Entity> radiusEntities = new HashSet<Entity>();
+		for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
+			for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
+				int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
+				for (Entity e : new Location(l.getWorld(), x + (chX * 16), y, z + (chZ * 16)).getChunk().getEntities()) {
+					if (e.getLocation().distance(l) <= radius && e.getLocation().getBlock() != l.getBlock())
+						radiusEntities.add(e);
+				}
+			}
+		}
+		return radiusEntities.toArray(new Entity[radiusEntities.size()]);
+	}
+
+	public void clear(final Location l) {
+		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+			public void run() {
+				try {
+					for (Entity e_ : getNearbyEntities(l, 20)) {
+						if (e_.getType() == EntityType.DROPPED_ITEM) {
+							e_.remove();
+						}
+					}
+				} catch (Exception e) {
+					;
+				}
+			}
+		}, 5L);
 	}
 
 }
