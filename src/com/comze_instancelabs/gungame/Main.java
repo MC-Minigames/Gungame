@@ -47,6 +47,7 @@ public class Main extends JavaPlugin implements Listener {
 	PluginInstance pli = null;
 	static Main m = null;
 	IArenaScoreboard scoreboard = new IArenaScoreboard(this);
+	boolean crackshot = false;
 
 	HashMap<String, Integer> lv = new HashMap<String, Integer>();
 	IClasses icl;
@@ -104,6 +105,10 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		} catch (Exception e) {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Fatal: Failed loading level upgrades from config. Did you misconfigure the items?");
+		}
+
+		if (getServer().getPluginManager().getPlugin("CrackShot") != null) {
+			crackshot = true;
 		}
 	}
 

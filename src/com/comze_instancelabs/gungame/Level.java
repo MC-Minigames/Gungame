@@ -13,7 +13,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
+import com.comze_instancelabs.minigamesapi.MinigamesAPI;
 import com.comze_instancelabs.minigamesapi.util.Util;
+import com.shampaggon.crackshot.CSUtility;
 
 public class Level {
 
@@ -27,11 +29,24 @@ public class Level {
 		p.getInventory().setLeggings(null);
 		p.getInventory().setBoots(null);
 
-		int lv = plv.get(p.getName());
+		int lv = plv.get(p.getName()) - 1;
+		if (lv < 0) {
+			lv = 0;
+		}
 
 		if (m.items.size() > lv) {
 			ArrayList<ItemStack> items = m.items.get(lv);
 			for (ItemStack item : items) {
+				if (item.getItemMeta().hasDisplayName()) {
+					if (item.getItemMeta().getDisplayName().startsWith("crackshot:")) {
+						if (m.crackshot) {
+							CSUtility cs = new CSUtility();
+							cs.giveWeapon(p, item.getItemMeta().getDisplayName().split(":")[1], 1);
+							continue;
+						}
+					}
+
+				}
 				if ((item.getTypeId() > 297 && item.getTypeId() < 302) || (item.getTypeId() > 305 && item.getTypeId() < 310) || (item.getTypeId() > 313 && item.getTypeId() < 318)) {
 					if (item.getTypeId() == 298 || item.getTypeId() == 306 || item.getTypeId() == 314) {
 						p.getInventory().setHelmet(item);
