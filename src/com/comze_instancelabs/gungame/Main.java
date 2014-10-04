@@ -181,7 +181,7 @@ public class Main extends JavaPlugin implements Listener {
 				Util.teleportPlayerFixed(p2, a.getSpawns().get(0));
 				Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 					public void run() {
-						clear(l);
+						clear(p2.getLocation());
 					}
 				}, 20L);
 
