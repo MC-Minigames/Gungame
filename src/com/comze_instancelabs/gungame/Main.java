@@ -53,8 +53,11 @@ public class Main extends JavaPlugin implements Listener {
 
 	ICommandHandler cmd;
 	IMessagesConfig im;
+	LevelsConfig lc;
 
 	MainSQL mainsql;
+
+	HashMap<Integer, ArrayList<ItemStack>> items = new HashMap<Integer, ArrayList<ItemStack>>();
 
 	public void onEnable() {
 		m = this;
@@ -80,6 +83,8 @@ public class Main extends JavaPlugin implements Listener {
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
 
+		lc = new LevelsConfig(this);
+
 		try {
 			mainsql = new MainSQL(this, true);
 			if (getConfig().getBoolean("mysql.enabled")) {
@@ -89,6 +94,17 @@ public class Main extends JavaPlugin implements Listener {
 			System.out.println("Failed to load MySQL." + e.getMessage());
 		}
 
+		try {
+			int c = 0;
+			if (lc.getConfig().isSet("levels.")) {
+				for (String lv_key : lc.getConfig().getConfigurationSection("levels").getKeys(false)) {
+					items.put(c, Util.parseItems(lc.getConfig().getString("levels." + lv_key + ".items")));
+					c++;
+				}
+			}
+		} catch (Exception e) {
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Fatal: Failed loading level upgrades from config. Did you misconfigure the items?");
+		}
 	}
 
 	public static ArrayList<Arena> loadArenas(JavaPlugin plugin, ArenasConfig cf) {
@@ -223,7 +239,7 @@ public class Main extends JavaPlugin implements Listener {
 				Integer current = lv.get(p1.getName());
 				lv.put(p1.getName(), current + 1);
 				p1.sendMessage(ChatColor.GREEN + "You got an upgrade: " + lv.get(p1.getName()));
-				Level.updatelv(lv, p1);
+				Level.updatelv(m, lv, p1);
 
 				scoreboard.updateScoreboard(a);
 
@@ -384,7 +400,7 @@ public class Main extends JavaPlugin implements Listener {
 					Integer current = lv.get(p1.getName());
 					lv.put(p1.getName(), current + 1);
 					p1.sendMessage(ChatColor.GREEN + "You got an upgrade: " + lv.get(p1.getName()));
-					Level.updatelv(lv, p1);
+					Level.updatelv(m, lv, p1);
 					scoreboard.updateScoreboard(a);
 					p1.setFoodLevel(20);
 					p1.setHealth(20);
