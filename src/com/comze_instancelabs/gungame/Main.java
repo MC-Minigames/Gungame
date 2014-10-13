@@ -165,27 +165,22 @@ public class Main extends JavaPlugin implements Listener {
 			if (event.getEntity().getKiller() instanceof Player && event.getEntity() instanceof Player && pli.global_players.containsKey(event.getEntity().getName()) && pli.global_players.containsKey(event.getEntity().getKiller().getName())) {
 				event.getEntity().setHealth(20);
 				final Location l = event.getEntity().getLocation();
-				clear(l);
-				String killername = event.getEntity().getKiller().getName();
-				String entityKilled = event.getEntity().getName();
-				// getLogger().info(killername + " killed " + entityKilled);
-				try {
-					pli.getRewardsInstance().giveKillReward(killername, 2);
-				} catch (Exception e) {
-					System.out.println("Please update MinigamesLib to the latest version to enable kill rewards.");
-				}
+				event.getDrops().clear();
+				final String killername = event.getEntity().getKiller().getName();
+				final String entityKilled = event.getEntity().getName();
+
+				Bukkit.getScheduler().runTask(this, new Runnable() {
+					public void run() {
+						pli.getRewardsInstance().giveKillReward(killername, 2);
+					}
+				});
+
 				final Player p1 = event.getEntity().getKiller();
 				final Player p2 = event.getEntity();
 
 				IArena a = (IArena) pli.global_players.get(p1.getName());
 				Util.teleportPlayerFixed(p2, a.getSpawns().get(0));
-				Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-					public void run() {
-						clear(p2.getLocation());
-					}
-				}, 20L);
 
-				// gp updaten:
 				Integer gpkiller = 2;
 				Integer gploser = 0;
 				if (getConfig().isSet("player." + killername)) {
@@ -219,27 +214,14 @@ public class Main extends JavaPlugin implements Listener {
 						selectwand.setItemMeta(meta);
 						p2.getInventory().addItem(selectwand);
 						p2.updateInventory();
-
-						// m.addextraitems(p1);
-						m.addextraitems(p2);
 					}
 				}, 20L);
 
 				p2.playSound(p2.getLocation(), Sound.CAT_MEOW, 1F, 1);
-
-				p2.setFoodLevel(20);
-
 				lv.put(p2.getName(), 0);
 
 				ArrayList<String> keys = new ArrayList<String>();
-				if (!getConfig().isConfigurationSection("player." + p2.getName() + ".items")) {
-					// getLogger().info("The killed player has no special items.");
-				} else {
-					keys.addAll(getConfig().getConfigurationSection("player." + p2.getName() + ".items").getKeys(false));
-					for (int i = 0; i < keys.size(); i++) {
-						getConfig().set("player." + p2.getName() + ".items." + keys.get(i), null);
-						this.saveConfig();
-					}
+				if (getConfig().isConfigurationSection("player." + p2.getName() + ".items")) {
 					getConfig().set("player." + p2.getName() + ".items", null);
 					this.saveConfig();
 				}
@@ -263,8 +245,7 @@ public class Main extends JavaPlugin implements Listener {
 				p2.setHealth(20);
 				p2.setFoodLevel(20);
 
-				// this.addextraitems(p1);
-				this.addextraitems(p2);
+				this.addextraitems(p1);
 			}
 		} else {
 			// death by something else -> respawn
@@ -428,16 +409,10 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void addextraitems(Player p) {
 		ArrayList<String> keys = new ArrayList<String>();
-		boolean continue_ = true;
 		try {
-			keys.addAll(getConfig().getConfigurationSection("player." + p.getName() + ".items").getKeys(false));
-		} catch (Exception ex) {
-			continue_ = false;
-		}
-		if (continue_) {
-			for (int i = 0; i < keys.size(); i++) {
+			for (String key_ : getConfig().getConfigurationSection("player." + p.getName() + ".items").getKeys(false)) {
 				for (AClass n : icl.c) {
-					if (n.getName().equalsIgnoreCase(keys.get(i))) {
+					if (n.getName().equalsIgnoreCase(key_)) {
 						for (ItemStack item : n.getItems()) {
 							p.getInventory().addItem(item);
 							p.updateInventory();
@@ -445,8 +420,9 @@ public class Main extends JavaPlugin implements Listener {
 					}
 				}
 			}
-		}
+		} catch (Exception ex) {
 
+		}
 	}
 
 	// Disable fall damage!
