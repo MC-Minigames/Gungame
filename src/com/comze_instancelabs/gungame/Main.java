@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,7 +29,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 
@@ -62,6 +62,8 @@ public class Main extends JavaPlugin implements Listener {
 	MainSQL mainsql;
 
 	HashMap<Integer, ArrayList<ItemStack>> items = new HashMap<Integer, ArrayList<ItemStack>>();
+
+	ArrayList<ItemStack> start_items = new ArrayList<ItemStack>();
 
 	public void onEnable() {
 		m = this;
@@ -105,6 +107,11 @@ public class Main extends JavaPlugin implements Listener {
 					items.put(c, Util.parseItems(lc.getConfig().getString("levels." + lv_key + ".items")));
 					c++;
 				}
+			}
+			if (lc.getConfig().isSet("config.join_level_items")) {
+				start_items = Util.parseItems(lc.getConfig().getString("config.join_level_items"));
+			} else {
+				start_items.add(new ItemStack(Material.WOOD_SWORD));
 			}
 		} catch (Exception e) {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Fatal: Failed loading level upgrades from config. Did you misconfigure the items?");
@@ -160,12 +167,12 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerDeath(PlayerDeathEvent event) {
+	public void onPlayerDeath(final PlayerDeathEvent event) {
 		if (event.getEntity().getKiller() != null) {
 			if (event.getEntity().getKiller() instanceof Player && event.getEntity() instanceof Player && pli.global_players.containsKey(event.getEntity().getName()) && pli.global_players.containsKey(event.getEntity().getKiller().getName())) {
-				event.getEntity().setHealth(20);
-				final Location l = event.getEntity().getLocation();
 				event.getDrops().clear();
+				event.getEntity().setHealth(20);
+				// final Location l = event.getEntity().getLocation();
 				final String killername = event.getEntity().getKiller().getName();
 				final String entityKilled = event.getEntity().getName();
 
@@ -208,11 +215,9 @@ public class Main extends JavaPlugin implements Listener {
 						p2.getInventory().setLeggings(null);
 						p2.getInventory().setBoots(null);
 						p2.getInventory().setArmorContents(null);
-						ItemStack selectwand = new ItemStack(Material.WOOD_SWORD, 1);
-						ItemMeta meta = (ItemMeta) selectwand.getItemMeta();
-						meta.setDisplayName("Gunsword");
-						selectwand.setItemMeta(meta);
-						p2.getInventory().addItem(selectwand);
+						for (ItemStack item : start_items) {
+							p2.getInventory().addItem(item);
+						}
 						p2.updateInventory();
 					}
 				}, 20L);
@@ -254,6 +259,7 @@ public class Main extends JavaPlugin implements Listener {
 				event.getEntity().setHealth(20);
 				if (event.getEntity() != null) {
 					if (event.getEntity() instanceof Player) {
+						event.getDrops().clear();
 						final Player p = (Player) event.getEntity();
 						IArena a = (IArena) pli.global_players.get(p.getName());
 						if (a != null && p != null) {
@@ -276,11 +282,9 @@ public class Main extends JavaPlugin implements Listener {
 								p.getInventory().setLeggings(null);
 								p.getInventory().setBoots(null);
 								p.getInventory().setArmorContents(null);
-								ItemStack selectwand = new ItemStack(Material.WOOD_SWORD, 1);
-								ItemMeta meta = (ItemMeta) selectwand.getItemMeta();
-								meta.setDisplayName("Gunsword");
-								selectwand.setItemMeta(meta);
-								p.getInventory().addItem(selectwand);
+								for (ItemStack item : start_items) {
+									p.getInventory().addItem(item);
+								}
 								p.updateInventory();
 
 								m.addextraitems(p);
@@ -333,13 +337,10 @@ public class Main extends JavaPlugin implements Listener {
 					this.saveConfig();
 				}
 
-				// add the sword again:
-				ItemStack selectwand = new ItemStack(Material.WOOD_SWORD, 1);
-				ItemMeta meta = (ItemMeta) selectwand.getItemMeta();
-				meta.setDisplayName("gunsword");
-				selectwand.setItemMeta(meta);
-				event.getPlayer().getInventory().addItem(selectwand);
-				event.getPlayer().updateInventory();
+				for (ItemStack item : start_items) {
+					p2.getInventory().addItem(item);
+				}
+				p2.updateInventory();
 
 				lv.put(p2.getName(), 0);
 
@@ -442,6 +443,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (pli.global_players.containsKey(p.getName())) {
 			IArena a = (IArena) pli.global_players.get(p.getName());
 			if (a.getArenaState() == ArenaState.INGAME) {
+				event.getItemDrop().remove();
 				event.setCancelled(true);
 			}
 		}

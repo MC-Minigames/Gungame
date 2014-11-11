@@ -48,9 +48,10 @@ public class IArena extends Arena {
 	public void joinPlayerLobby(String p_) {
 		super.joinPlayerLobby(p_);
 		m.lv.put(p_, 0);
-		ItemStack w = new ItemStack(Material.WOOD_SWORD, 1);
 		Player p = Bukkit.getPlayer(p_);
-		p.getInventory().addItem(w);
+		for (ItemStack item : m.start_items) {
+			p.getInventory().addItem(item);
+		}
 		p.updateInventory();
 		m.addextraitems(p);
 		m.scoreboard.updateScoreboard(this);
