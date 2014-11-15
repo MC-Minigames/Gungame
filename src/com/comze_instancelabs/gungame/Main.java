@@ -65,6 +65,8 @@ public class Main extends JavaPlugin implements Listener {
 
 	ArrayList<ItemStack> start_items = new ArrayList<ItemStack>();
 
+	boolean first_to_max_wins = false;
+
 	public void onEnable() {
 		m = this;
 		IMessagesConfig im = new IMessagesConfig(this);
@@ -85,9 +87,12 @@ public class Main extends JavaPlugin implements Listener {
 		cmd = new ICommandHandler();
 
 		this.getConfig().addDefault("config.map_rotation_time_minutes", 10);
+		this.getConfig().addDefault("config.first_to_max_levels_wins_game", false);
 
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
+
+		first_to_max_wins = this.getConfig().getBoolean("config.first_to_max_levels_wins_game");
 
 		lc = new LevelsConfig(this);
 
@@ -240,7 +245,7 @@ public class Main extends JavaPlugin implements Listener {
 				p1.playEffect(p1.getLocation(), Effect.POTION_BREAK, 5);
 				Integer current = lv.get(p1.getName());
 				lv.put(p1.getName(), current + 1);
-				p1.sendMessage(ChatColor.GREEN + "You got an upgrade: " + lv.get(p1.getName()));
+				p1.sendMessage(im.upgrade.replaceAll("<level>", Integer.toString(lv.get(p1.getName()))));
 				Level.updatelv(m, lv, p1);
 
 				scoreboard.updateScoreboard(a);
@@ -396,7 +401,7 @@ public class Main extends JavaPlugin implements Listener {
 					p1.playEffect(p1.getLocation(), Effect.POTION_BREAK, 5);
 					Integer current = lv.get(p1.getName());
 					lv.put(p1.getName(), current + 1);
-					p1.sendMessage(ChatColor.GREEN + "You got an upgrade: " + lv.get(p1.getName()));
+					p1.sendMessage(im.upgrade.replaceAll("<level>", Integer.toString(lv.get(p1.getName()))));
 					Level.updatelv(m, lv, p1);
 					scoreboard.updateScoreboard(a);
 					p1.setFoodLevel(20);

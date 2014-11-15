@@ -8,16 +8,20 @@ import com.comze_instancelabs.minigamesapi.config.MessagesConfig;
 public class IMessagesConfig extends MessagesConfig {
 
 	public String broadcast_next_map = "&6Next map on map rotation in &c10 &6seconds!";
+	public String upgrade = "&aYou got an upgrade: <level>!";
 
 	public IMessagesConfig(JavaPlugin arg0) {
 		super(arg0);
 
 		this.getConfig().addDefault("messages.broadcast_next_map", broadcast_next_map);
+		this.getConfig().addDefault("messages.upgrade", upgrade);
 
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
 
 		this.broadcast_next_map = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.broadcast_next_map"));
+		this.upgrade = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.upgrade"));
+
 	}
 
 }

@@ -3,18 +3,12 @@ package com.comze_instancelabs.gungame;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 
-import com.comze_instancelabs.minigamesapi.MinigamesAPI;
-import com.comze_instancelabs.minigamesapi.util.Util;
+import com.comze_instancelabs.minigamesapi.Arena;
+import com.comze_instancelabs.minigamesapi.util.Validator;
 import com.shampaggon.crackshot.CSUtility;
 
 public class Level {
@@ -32,6 +26,21 @@ public class Level {
 		}
 
 		int temp_lv = 0;
+
+		if (m.items.size() < lv + 1) {
+			if (m.first_to_max_wins) {
+				Arena a = m.pli.global_players.get(p.getName());
+				for (String p_ : a.getAllPlayers()) {
+					if (!p_.equalsIgnoreCase(p.getName())) {
+						m.pli.global_lost.put(p_, a);
+					}
+					if (Validator.isPlayerOnline(p_)) {
+						Bukkit.getPlayer(p_).sendMessage(m.pli.getMessagesConfig().server_broadcast_winner.replaceAll("<player>", p.getName()));
+					}
+				}
+				a.stop();
+			}
+		}
 
 		if (m.items.size() > lv) {
 			temp_lv = lv;
