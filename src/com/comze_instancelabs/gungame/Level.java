@@ -35,7 +35,7 @@ public class Level {
 						m.pli.global_lost.put(p_, a);
 					}
 					if (Validator.isPlayerOnline(p_)) {
-						Bukkit.getPlayer(p_).sendMessage(m.pli.getMessagesConfig().server_broadcast_winner.replaceAll("<player>", p.getName()));
+						Bukkit.getPlayer(p_).sendMessage(m.pli.getMessagesConfig().server_broadcast_winner.replaceAll("<arena>", a.getName()).replaceAll("<player>", p.getName()));
 					}
 				}
 				a.stop();
