@@ -20,8 +20,6 @@ public class IArenaScoreboard extends ArenaScoreboard {
 
 	HashMap<String, Scoreboard> ascore = new HashMap<String, Scoreboard>();
 	HashMap<String, Objective> aobjective = new HashMap<String, Objective>();
-	HashMap<String, Score> aobjective2 = new HashMap<String, Score>();
-
 	HashMap<String, Objective> gpp = new HashMap<String, Objective>();
 
 	Main plugin = null;
