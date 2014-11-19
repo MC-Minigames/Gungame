@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -67,6 +68,8 @@ public class Main extends JavaPlugin implements Listener {
 
 	boolean first_to_max_wins = false;
 
+	Random r;
+	
 	public void onEnable() {
 		m = this;
 		IMessagesConfig im = new IMessagesConfig(this);
@@ -125,6 +128,8 @@ public class Main extends JavaPlugin implements Listener {
 		if (getServer().getPluginManager().getPlugin("CrackShot") != null) {
 			crackshot = true;
 		}
+		
+		r = new Random();
 	}
 
 	public static ArrayList<Arena> loadArenas(JavaPlugin plugin, ArenasConfig cf) {
@@ -191,7 +196,7 @@ public class Main extends JavaPlugin implements Listener {
 				final Player p2 = event.getEntity();
 
 				IArena a = (IArena) pli.global_players.get(p1.getName());
-				Util.teleportPlayerFixed(p2, a.getSpawns().get(0));
+				Util.teleportPlayerFixed(p2, a.getSpawns().get(r.nextInt(a.getSpawns().size())));
 
 				Integer gpkiller = 2;
 				Integer gploser = 0;
@@ -268,7 +273,7 @@ public class Main extends JavaPlugin implements Listener {
 						final Player p = (Player) event.getEntity();
 						IArena a = (IArena) pli.global_players.get(p.getName());
 						if (a != null && p != null) {
-							Util.teleportPlayerFixed(p, a.getSpawns().get(0));
+							Util.teleportPlayerFixed(p, a.getSpawns().get(r.nextInt(a.getSpawns().size())));
 						} else {
 							return;
 						}
@@ -327,7 +332,7 @@ public class Main extends JavaPlugin implements Listener {
 				p2.getInventory().setChestplate(null);
 				p2.getInventory().setLeggings(null);
 				p2.getInventory().setBoots(null);
-				Util.teleportPlayerFixed(p2, a.getSpawns().get(0));
+				Util.teleportPlayerFixed(p2, a.getSpawns().get(r.nextInt(a.getSpawns().size())));
 
 				ArrayList<String> keys = new ArrayList<String>();
 				if (!getConfig().isConfigurationSection("player." + p2.getName() + ".items")) {

@@ -28,7 +28,7 @@ public class IArena extends Arena {
 	boolean cteam = true;
 
 	boolean started_map_rotation = false;
-
+	
 	public IArena(Main m, String arena_id) {
 		super(m, arena_id, ArenaType.JUMPNRUN);
 		pli = MinigamesAPI.getAPI().pinstances.get(m);
