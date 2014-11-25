@@ -19,7 +19,7 @@ public class LevelsConfig {
 		this.getConfig().options().header("All level upgrades from 0 to 30.");
 
 		this.getConfig().addDefault("config.join_level_items", "268*1");
-		if (this.getConfig().isSet("config.generatedv1")) {
+		if (!this.getConfig().isSet("config.generatedv1")) {
 			this.getConfig().addDefault("levels.level0.items", "268*1;261*1;262*64");
 			this.getConfig().addDefault("levels.level1.items", "268*1;261*1;262*64;262*64;299*1");
 			this.getConfig().addDefault("levels.level2.items", "268*1;261*1;262*64;262*64;299*1;298*1;300*1;301*1");
