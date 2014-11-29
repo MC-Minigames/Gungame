@@ -29,7 +29,7 @@ public class IClasses extends Classes {
 	}
 
 	@Override
-	public void openGUI(String p_) {
+	public void openGUI(final String p_) {
 		final Player p = Bukkit.getPlayer(p_);
 		final FileConfiguration config = MinigamesAPI.getAPI().pinstances.get(plugin).getClassesConfig().getConfig();
 		IconMenu iconm;
@@ -40,21 +40,23 @@ public class IClasses extends Classes {
 				@Override
 				public void onOptionClick(IconMenu.OptionClickEvent event) {
 					String d = event.getName();
-					for (AClass n : c) {
-						if (n.getName().equalsIgnoreCase(d)) {
-							int gp = config.getInt("conf.kits." + n.getName() + ".money_amount");
-							int pgp = getConfig().isSet("player." + p.getName() + ".gp") ? getConfig().getInt("player." + p.getName() + ".gp") : 0;
-							p.sendMessage(ChatColor.GREEN + "You need " + gp + " GP for " + event.getName() + ".");
-							if (pgp > gp - 1) {
-								getConfig().set("player." + p.getName() + ".items." + event.getName(), "true");
-								getConfig().set("player." + p.getName() + ".gp", getConfig().getInt("player." + p.getName() + ".gp") - gp);
-								plugin.saveConfig();
-								if (MinigamesAPI.getAPI().pinstances.get(plugin).global_players.containsKey(event.getPlayer().getName())) {
-									plugin.addextraitems(event.getPlayer());
+					if (event.getPlayer().getName().equalsIgnoreCase(p_)) {
+						for (AClass n : c) {
+							if (n.getName().equalsIgnoreCase(d)) {
+								int gp = config.getInt("conf.kits." + n.getName() + ".money_amount");
+								int pgp = getConfig().isSet("player." + p.getName() + ".gp") ? getConfig().getInt("player." + p.getName() + ".gp") : 0;
+								p.sendMessage(ChatColor.GREEN + "You need " + gp + " GP for " + event.getName() + ".");
+								if (pgp > gp - 1) {
+									getConfig().set("player." + p.getName() + ".items." + event.getName(), "true");
+									getConfig().set("player." + p.getName() + ".gp", getConfig().getInt("player." + p.getName() + ".gp") - gp);
+									plugin.saveConfig();
+									if (MinigamesAPI.getAPI().pinstances.get(plugin).global_players.containsKey(event.getPlayer().getName())) {
+										plugin.addextraitems(event.getPlayer());
+									}
+									p.sendMessage(ChatColor.GREEN + "Successfully purchased " + d + ".");
+								} else {
+									p.sendMessage(ChatColor.RED + "You don't have enough GP!");
 								}
-								p.sendMessage(ChatColor.GREEN + "Successfully purchased " + d + ".");
-							} else {
-								p.sendMessage(ChatColor.RED + "You don't have enough GP!");
 							}
 						}
 					}
