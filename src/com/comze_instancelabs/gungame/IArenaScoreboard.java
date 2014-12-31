@@ -32,6 +32,9 @@ public class IArenaScoreboard extends ArenaScoreboard {
 		if (arena != null) {
 			for (String p_ : arena.getAllPlayers()) {
 				Player p = Bukkit.getPlayer(p_);
+				if(p == null){
+					return;
+				}
 				if (!ascore.containsKey(p_)) {
 					ascore.put(p_, Bukkit.getScoreboardManager().getNewScoreboard());
 				}
