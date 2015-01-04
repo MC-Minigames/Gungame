@@ -59,17 +59,17 @@ public class Level {
 					}
 				}
 			}
-			if ((item.getTypeId() > 297 && item.getTypeId() < 302) || (item.getTypeId() > 305 && item.getTypeId() < 310) || (item.getTypeId() > 313 && item.getTypeId() < 318)) {
-				if (item.getTypeId() == 298 || item.getTypeId() == 306 || item.getTypeId() == 314) {
+			if ((item.getTypeId() > 297 && item.getTypeId() < 318)) {
+				if (item.getTypeId() == 298 || item.getTypeId() == 302 || item.getTypeId() == 306 || item.getTypeId() == 310 || item.getTypeId() == 314) {
 					p.getInventory().setHelmet(item);
 				}
-				if (item.getTypeId() == 299 || item.getTypeId() == 307 || item.getTypeId() == 315) {
+				if (item.getTypeId() == 299 || item.getTypeId() == 303 || item.getTypeId() == 307 || item.getTypeId() == 311 || item.getTypeId() == 315) {
 					p.getInventory().setChestplate(item);
 				}
-				if (item.getTypeId() == 300 || item.getTypeId() == 308 || item.getTypeId() == 316) {
+				if (item.getTypeId() == 300 || item.getTypeId() == 304 || item.getTypeId() == 308 || item.getTypeId() == 312 || item.getTypeId() == 316) {
 					p.getInventory().setLeggings(item);
 				}
-				if (item.getTypeId() == 301 || item.getTypeId() == 309 || item.getTypeId() == 317) {
+				if (item.getTypeId() == 301 || item.getTypeId() == 305 || item.getTypeId() == 309 || item.getTypeId() == 313 || item.getTypeId() == 317) {
 					p.getInventory().setBoots(item);
 				}
 			} else {
