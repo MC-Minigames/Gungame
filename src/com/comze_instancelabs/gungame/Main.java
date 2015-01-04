@@ -68,7 +68,7 @@ public class Main extends JavaPlugin implements Listener {
 	boolean first_to_max_wins = false;
 
 	Random r;
-	
+
 	public void onEnable() {
 		m = this;
 		IMessagesConfig im = new IMessagesConfig(this);
@@ -90,9 +90,15 @@ public class Main extends JavaPlugin implements Listener {
 
 		this.getConfig().addDefault("config.map_rotation_time_minutes", 10);
 		this.getConfig().addDefault("config.first_to_max_levels_wins_game", false);
+		this.getConfig().addDefault("config.die_below_bedrock_level", true);
 
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
+
+		boolean die_below_zero = this.getConfig().getBoolean("config.die_below_bedrock_level");
+		if (die_below_zero) {
+			pli.getArenaListener().loseY = 100;
+		}
 
 		first_to_max_wins = this.getConfig().getBoolean("config.first_to_max_levels_wins_game");
 
@@ -127,7 +133,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (getServer().getPluginManager().getPlugin("CrackShot") != null) {
 			crackshot = true;
 		}
-		
+
 		r = new Random();
 	}
 
@@ -177,6 +183,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onPlayerDeath(final PlayerDeathEvent event) {
+		// TODO This is still the original old gungame code, needs performance upgrades
 		if (event.getEntity().getKiller() != null) {
 			if (event.getEntity().getKiller() instanceof Player && event.getEntity() instanceof Player && pli.global_players.containsKey(event.getEntity().getName()) && pli.global_players.containsKey(event.getEntity().getKiller().getName())) {
 				event.getDrops().clear();
